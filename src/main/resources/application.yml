@@ -12,3 +12,9 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: japan_trip_db
+
