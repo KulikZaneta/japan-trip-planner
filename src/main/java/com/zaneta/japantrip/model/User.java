@@ -1,6 +1,10 @@
 package com.zaneta.japantrip.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,19 +29,30 @@ public class User {
     @GenericGenerator.*/
     private UUID userId;
 
-    private String name;
+    @NotBlank(message = "FirstName is required")
+    @Size(max = 50,message = "FirstName must be at most 50 characters")
+    private String firstName;
 
-    private String surname;
+    @NotBlank(message = "LastName is required")
+    @Size(max = 50,message = "LastName must be at most 50 characters")
+    private String lastName;
 
+    @NotBlank(message = "Nickname is required")
+    @Size(max = 50,message = "Nickname must be at most 50 characters")
+    @Column(unique = true)
     private String nickName;
 
-    private Long age;
-
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email must be valid")
+    @Column(unique = true)
     private String email;
 
+    @NotBlank(message = "Password is required")
+    @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Role is required")
     private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
