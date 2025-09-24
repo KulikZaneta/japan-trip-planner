@@ -29,30 +29,34 @@ public class User {
     @GenericGenerator.*/
     private UUID userId;
 
-    @NotBlank(message = "FirstName is required")
+    @NotBlank(message = "First name is required")
     @Size(max = 50,message = "FirstName must be at most 50 characters")
+    @Column(name = "first_name", length = 50, nullable = false)
     private String firstName;
 
-    @NotBlank(message = "LastName is required")
+    @NotBlank(message = "Last name is required")
     @Size(max = 50,message = "LastName must be at most 50 characters")
+    @Column(name = "last_name", length = 50, nullable = false)
     private String lastName;
 
     @NotBlank(message = "Nickname is required")
     @Size(max = 50,message = "Nickname must be at most 50 characters")
-    @Column(unique = true)
-    private String nickName;
+    @Column(name = "nickname", length = 50, nullable = false, unique = true)
+    private String nickname;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Email must be valid")
-    @Column(unique = true)
+    @Column(name = "email", length = 50, nullable = false, unique = true)
     private String email;
 
     @NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters")
+    @Column(name = "password", length = 50, nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Role is required")
+    @Column(name = "role", nullable = false, length = 20)
     private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
