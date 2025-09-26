@@ -11,5 +11,11 @@ public interface UserService {
 
     List<User> getUsers();
 
+    User createUser(User user);
+
+    User updateUser(User user);
+
+    User patchUser(User user);
+
 }
 
