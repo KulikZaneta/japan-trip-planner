@@ -17,5 +17,7 @@ public interface UserService {
 
     User patchUser(User user);
 
+    void deleteUserById(UUID id);
+
 }
 

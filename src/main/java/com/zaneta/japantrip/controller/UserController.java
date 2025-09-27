@@ -76,5 +76,11 @@ public class UserController {
         return ResponseEntity.ok(userResponseMapper.mapToUserResponse(patchUser));
     }
 
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> deleteUserById(@PathVariable UUID id) {
+        userService.deleteUserById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }
 
