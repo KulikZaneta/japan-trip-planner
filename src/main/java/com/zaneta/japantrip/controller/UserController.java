@@ -1,6 +1,5 @@
 package com.zaneta.japantrip.controller;
 
-import com.zaneta.japantrip.mapper.UserPatchRequestMapper;
 import com.zaneta.japantrip.mapper.UserRegistrationMapper;
 import com.zaneta.japantrip.mapper.UserResponseMapper;
 import com.zaneta.japantrip.mapper.UserUpdateRequestMapper;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/japan")
+@RequestMapping("/users")
 public class UserController {
 
     private final UserResponseMapper userResponseMapper;
@@ -27,25 +26,22 @@ public class UserController {
 
     private final UserUpdateRequestMapper userUpdateRequestMapper;
 
-    private final UserPatchRequestMapper userPatchRequestMapper;
-
     private final UserService userService;
 
-    public UserController(UserResponseMapper userResponseMapper, UserRegistrationMapper userRegistrationMapper, UserUpdateRequestMapper userUpdateRequestMapper, UserPatchRequestMapper userPatchRequestMapper, UserService userService) {
+    public UserController(UserResponseMapper userResponseMapper, UserRegistrationMapper userRegistrationMapper, UserUpdateRequestMapper userUpdateRequestMapper, UserService userService) {
         this.userResponseMapper = userResponseMapper;
         this.userRegistrationMapper = userRegistrationMapper;
         this.userUpdateRequestMapper = userUpdateRequestMapper;
-        this.userPatchRequestMapper = userPatchRequestMapper;
         this.userService = userService;
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUser(@PathVariable UUID id) {
         User user = userService.getUserById(id);
         return ResponseEntity.ok(userResponseMapper.mapToUserResponse(user));
     }
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRegistrationRequest request) {
         User user = userRegistrationMapper.mapToUser(request);
 
@@ -56,7 +52,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping("/users/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<UserResponse> updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateRequest request) {
         User user = userUpdateRequestMapper.mapToUser(request);
         user.setUserId(id);
@@ -66,17 +62,17 @@ public class UserController {
         return ResponseEntity.ok(userResponseMapper.mapToUserResponse(updatedUser));
     }
 
-    @PatchMapping("/users/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<UserResponse> updateUser(@PathVariable UUID id, @RequestBody @Valid UserPatchRequest request) {
-        User user = userPatchRequestMapper.mapToUser(request);
-        user.setUserId(id);
 
-        User patchUser = userService.patchUser(user);
+        User patchUser = userService.patchUser(id, request);
 
-        return ResponseEntity.ok(userResponseMapper.mapToUserResponse(patchUser));
+        UserResponse response = userResponseMapper.mapToUserResponse(patchUser);
+
+        return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable UUID id) {
         userService.deleteUserById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
