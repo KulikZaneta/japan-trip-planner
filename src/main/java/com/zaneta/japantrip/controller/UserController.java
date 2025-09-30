@@ -1,8 +1,8 @@
 package com.zaneta.japantrip.controller;
 
-import com.zaneta.japantrip.mapper.UserRegistrationMapper;
-import com.zaneta.japantrip.mapper.UserResponseMapper;
-import com.zaneta.japantrip.mapper.UserUpdateRequestMapper;
+import com.zaneta.japantrip.mapper.user.UserRegistrationMapper;
+import com.zaneta.japantrip.mapper.user.UserResponseMapper;
+import com.zaneta.japantrip.mapper.user.UserUpdateRequestMapper;
 import com.zaneta.japantrip.model.User;
 import com.zaneta.japantrip.model.dto.user.UserPatchRequest;
 import com.zaneta.japantrip.model.dto.user.UserRegistrationRequest;
@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -38,36 +39,43 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUser(@PathVariable UUID id) {
         User user = userService.getUserById(id);
-        return ResponseEntity.ok(userResponseMapper.mapToUserResponse(user));
+        UserResponse userResponse = userResponseMapper.toUserResponse(user);
+
+        return ResponseEntity.ok(userResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserResponse>> getAllUser() {
+        List<User> users = userService.getUsers();
+        List<UserResponse> userResponses = userResponseMapper.toUserResponseList(users);
+
+        return ResponseEntity.ok(userResponses);
     }
 
     @PostMapping("/register")
     public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRegistrationRequest request) {
-        User user = userRegistrationMapper.mapToUser(request);
-
+        User user = userRegistrationMapper.toUser(request);
         User savedUser = userService.createUser(user);
+        UserResponse userResponse = userResponseMapper.toUserResponse(savedUser);
 
-        UserResponse response = userResponseMapper.mapToUserResponse(savedUser);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateRequest request) {
-        User user = userUpdateRequestMapper.mapToUser(request);
+        User user = userUpdateRequestMapper.toUser(request);
         user.setUserId(id);
 
         User updatedUser = userService.updateUser(user);
+        UserResponse userResponse = userResponseMapper.toUserResponse(updatedUser);
 
-        return ResponseEntity.ok(userResponseMapper.mapToUserResponse(updatedUser));
+        return ResponseEntity.ok(userResponse);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<UserResponse> updateUser(@PathVariable UUID id, @RequestBody @Valid UserPatchRequest request) {
-
         User patchUser = userService.patchUser(id, request);
-
-        UserResponse response = userResponseMapper.mapToUserResponse(patchUser);
+        UserResponse response = userResponseMapper.toUserResponse(patchUser);
 
         return ResponseEntity.ok(response);
     }
@@ -75,6 +83,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable UUID id) {
         userService.deleteUserById(id);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
