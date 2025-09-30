@@ -1,4 +1,4 @@
-package com.zaneta.japantrip.mapper;
+package com.zaneta.japantrip.mapper.user;
 
 import com.zaneta.japantrip.model.User;
 import com.zaneta.japantrip.model.dto.user.UserPatchRequest;
@@ -11,5 +11,5 @@ public interface UserPatchRequestMapper {
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "reviews", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void mapToUser(UserPatchRequest userPatchRequest, @MappingTarget User user);
+    void toUser(UserPatchRequest userPatchRequest, @MappingTarget User user);
 }

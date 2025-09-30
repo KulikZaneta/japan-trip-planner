@@ -1,4 +1,4 @@
-package com.zaneta.japantrip.mapper;
+package com.zaneta.japantrip.mapper.user;
 
 import com.zaneta.japantrip.model.User;
 import com.zaneta.japantrip.model.dto.user.UserUpdateRequest;
@@ -11,6 +11,6 @@ public interface UserUpdateRequestMapper {
     @Mapping(target = "userId", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "reviews", ignore = true)
-    User mapToUser(UserUpdateRequest userUpdateRequest);
+    User toUser(UserUpdateRequest userUpdateRequest);
 
 }

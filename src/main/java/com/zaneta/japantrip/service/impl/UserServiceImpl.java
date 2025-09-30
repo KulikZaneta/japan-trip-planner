@@ -1,7 +1,7 @@
 package com.zaneta.japantrip.service;
 
 import com.zaneta.japantrip.exception.InvalidFieldException;
-import com.zaneta.japantrip.mapper.UserPatchRequestMapper;
+import com.zaneta.japantrip.mapper.user.UserPatchRequestMapper;
 import com.zaneta.japantrip.model.Role;
 import com.zaneta.japantrip.model.User;
 import com.zaneta.japantrip.model.dto.user.UserPatchRequest;
@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUsers() {
+    public List<User> getUsersById() {
         return userRepository.findAll();
     }
 

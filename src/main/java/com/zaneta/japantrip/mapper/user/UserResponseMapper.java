@@ -1,14 +1,15 @@
-package com.zaneta.japantrip.mapper;
+package com.zaneta.japantrip.mapper.user;
 
 import com.zaneta.japantrip.model.User;
 import com.zaneta.japantrip.model.dto.user.UserResponse;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface UserResponseMapper {
 
-    UserResponse mapToUserResponse(User user);
+    UserResponse toUserResponse(User user);
 
-    User mapToUser(UserResponse userResponse);
-
+    List<UserResponse> toUserResponseList(List<User> user);
 }
