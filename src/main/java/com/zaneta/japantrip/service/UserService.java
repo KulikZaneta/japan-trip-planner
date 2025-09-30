@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface UserService {
 
-    User getUserById(UUID id);
+    User getUserById(UUID userId);
 
     List<User> getUsers();
 
@@ -16,9 +16,9 @@ public interface UserService {
 
     User updateUser(User user);
 
-    User patchUser(UUID id, UserPatchRequest request);
+    User patchUser(UUID userId, UserPatchRequest request);
 
-    void deleteUserById(UUID id);
+    void deleteUserById(UUID userId);
 
 }
 

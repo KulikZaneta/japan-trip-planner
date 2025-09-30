@@ -1,4 +1,4 @@
-package com.zaneta.japantrip.service;
+package com.zaneta.japantrip.service.impl;
 
 import com.zaneta.japantrip.exception.InvalidFieldException;
 import com.zaneta.japantrip.mapper.user.UserPatchRequestMapper;
@@ -6,6 +6,7 @@ import com.zaneta.japantrip.model.Role;
 import com.zaneta.japantrip.model.User;
 import com.zaneta.japantrip.model.dto.user.UserPatchRequest;
 import com.zaneta.japantrip.repository.UserRepository;
+import com.zaneta.japantrip.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,13 +29,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(UUID id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User with id " + id + " not found"));
+    public User getUserById(UUID userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
     }
 
     @Override
-    public List<User> getUsersById() {
+    public List<User> getUsers() {
         return userRepository.findAll();
     }
 
@@ -48,17 +49,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(User user) {
-        userRepository.findById(user.getUserId()).orElseThrow(() -> new EntityNotFoundException("User with id :" + user.getUserId() + " not found"));
+        User existingUser = userRepository.findById(user.getUserId()).orElseThrow(() -> new EntityNotFoundException("User with id :" + user.getUserId() + " not found"));
+
+        existingUser.setFirstName(user.getFirstName());
+        existingUser.setLastName(user.getLastName());
+        existingUser.setNickname(user.getNickname());
+        existingUser.setEmail(user.getEmail());
+
         if (user.getRole() == null) {
             user.setRole(Role.ROLE_USER);
         }
+
         return userRepository.save(user);
     }
 
     @Transactional
     @Override
-    public User patchUser(UUID id, UserPatchRequest request) {
-        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User with id :" + id + " not found"));
+    public User patchUser(UUID userId, UserPatchRequest request) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User with id :" + userId + " not found"));
 
         Map<String, Object> fields = new HashMap<>();
         fields.put("firstName", request.getFirstName());
@@ -69,18 +77,18 @@ public class UserServiceImpl implements UserService {
 
         fields.forEach((field, value) -> {
             if (value instanceof String str && str.isBlank()) {
-                    throw new InvalidFieldException(field + " cannot be null");
+                throw new InvalidFieldException(field + " cannot be null");
             }
         });
 
-        userPatchRequestMapper.mapToUser(request, user);
+        userPatchRequestMapper.toUser(request, user);
 
         return userRepository.save(user);
     }
 
     @Override
-    public void deleteUserById(UUID id) {
-        userRepository.deleteById(id);
+    public void deleteUserById(UUID userId) {
+        userRepository.deleteById(userId);
     }
 
 
