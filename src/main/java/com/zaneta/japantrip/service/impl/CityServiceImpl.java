@@ -34,7 +34,7 @@ public class CityServiceImpl implements CityService {
     public City createCity(City city) {
         cityRepository.findByNameOfCity(city.getNameOfCity())
                 .ifPresent(c -> {
-                    throw new IllegalArgumentException("City with name " + city.getNameOfCity() + " already exists");
+                    throw new IllegalArgumentException("City with name " + c.getNameOfCity() + " already exists");
                 });
         return cityRepository.save(city);
     }
