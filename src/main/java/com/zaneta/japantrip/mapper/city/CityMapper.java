@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
@@ -22,6 +23,19 @@ public interface CityMapper {
     //CityRequest toCityRequestDto(City city);
 
     default CityResponse toCityResponse(City city) {
+        Set<AttractionResponse> attractionResponses = Optional.ofNullable(city.getAttractions())
+                .orElse(Collections.emptySet())
+                .stream()
+                .map(attraction -> new AttractionResponse(
+                        attraction.getName(),
+                        attraction.getDescription(),
+                        attraction.isActive(),
+                        attraction.getCity() != null ? attraction.getCity().getNameOfCity() : null,
+                        attraction.getImageUrl(),
+                        attraction.getSourceUrl()
+                ))
+                .collect(Collectors.toSet());
+
         return new CityResponse(
                 city.getId(),
                 city.getNameOfCity(),
@@ -29,18 +43,7 @@ public interface CityMapper {
                 city.getDescription(),
                 city.getPopulation(),
                 city.getArea(),
-                Optional.ofNullable(city.getAttractions())
-                        .orElse(Collections.emptySet())
-                        .stream()
-                        .map(attraction -> new AttractionResponse(
-                                attraction.getName(),
-                                attraction.getDescription(),
-                                attraction.isActive(),
-                                attraction.getCity() != null ? attraction.getCity().getId() : null,
-                                attraction.getImageUrl(),
-                                attraction.getSourceUrl()
-                        ))
-                        .collect(Collectors.toSet())
+                attractionResponses
         );
     }
 

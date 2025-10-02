@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,7 +15,7 @@ public class AttractionRequest {
 
     private String description;
 
-    private List<Long> cityId;
+    private String cityName;
 
     private String imageUrl;
 

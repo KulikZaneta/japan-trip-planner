@@ -12,7 +12,7 @@ public record AttractionResponse(
 
         boolean isActive,
 
-        Long cityId,
+        String cityName,
 
         String imageUrl,
 
