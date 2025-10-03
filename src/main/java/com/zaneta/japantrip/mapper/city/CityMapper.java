@@ -27,6 +27,7 @@ public interface CityMapper {
                 .orElse(Collections.emptySet())
                 .stream()
                 .map(attraction -> new AttractionResponse(
+                        attraction.getId(),
                         attraction.getName(),
                         attraction.getDescription(),
                         attraction.isActive(),
